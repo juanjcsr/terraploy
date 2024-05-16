@@ -10,3 +10,10 @@ resource "helm_release" "argocd" {
 
   values = [file("values/argocd.yaml")]
 }
+
+resource "helm_release" "argocd_config" {
+    namespace "argocd"
+    depends_on = [helm_release.argocd]
+    name = "argocd-config"
+    chart = "./values/argocdapps/root-app"
+}
