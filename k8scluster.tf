@@ -12,7 +12,7 @@ resource "helm_release" "argocd" {
 }
 
 resource "helm_release" "argocd_config" {
-    namespace "argocd"
+    namespace = "argocd"
     depends_on = [helm_release.argocd]
     name = "argocd-config"
     chart = "./values/argocdapps/root-app"

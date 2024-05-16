@@ -7,9 +7,9 @@ server:
   - --insecure
 
 
-configs:
-  secret:
-      argocdServerAdminPassword: "abcdef" # real password is here
+# configs:
+#   secret:
+#       argocdServerAdminPassword: "abcdef" # real password is here
   # repositories:
   #   - url: https://github.com/juanjcsr/terraploy.git
   #     name: terraploy
