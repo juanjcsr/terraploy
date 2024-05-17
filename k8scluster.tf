@@ -1,19 +1,23 @@
 
+resource "kubernetes_namespace" "argocd" {
+  metadata {
+    name = "argocd"
+  }
+}
 
 resource "helm_release" "argocd" {
   name       = "argocd"
 
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argo-cd"
-  namespace  = "argocd"
-  create_namespace = true
+  namespace  = kubernetes_namespace.argocd.metadata.0.name
 
-  values = [file("values/argocd.yaml")]
+  values = [file("charts/argo-cd/values.yaml")]
 }
 
 resource "helm_release" "argocd_config" {
     namespace = "argocd"
     depends_on = [helm_release.argocd]
     name = "argocd-config"
-    chart = "./values/argocdapps/charts/root-app"
+    chart = "./charts/root-app"
 }
