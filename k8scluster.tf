@@ -19,5 +19,5 @@ resource "helm_release" "argocd_config" {
     namespace = "argocd"
     depends_on = [helm_release.argocd]
     name = "argocd-config"
-    chart = "./charts/root-app"
+    chart = "charts/root-app"
 }
