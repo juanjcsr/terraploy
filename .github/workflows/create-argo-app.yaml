@@ -17,3 +17,13 @@ jobs:
       with:
         username: ${{ env.DOCKERHUB_USERNAME }}
         password: ${{ env.DOCKERHUB_TOKEN }}
+    
+    - name: get diff from definition file
+      id: get_diff
+      run: |
+        git diff --name-only ${{ github.event.before }} ${{ github.sha }} > diff.txt
+        echo "IMAGE_TO_BUILD={$(cat diff.txt | awk -F/ '{print $2}' | sort | uniq)}"
+    - name: Build and push
+      run: |
+        IMAGE_TO_BUILD=$(cat diff.txt | awk -F/ '{print $2}' | sort | uniq)
+        echo $IMAGE_TO_BUILD
