@@ -39,7 +39,9 @@ jobs:
         echo $IMAGE_TO_BUILD
 
         docker push ${{ env.DOCKERHUB_USERNAME }}/$IMAGE_TO_BUILD:$GITHUB_SHA
-      if: github.event_name != 'pull_request'
+      if: |
+        github.event_name != 'pull_request'
+        env.image_to_build != ''
 
     - name: create argo application
       run: |
