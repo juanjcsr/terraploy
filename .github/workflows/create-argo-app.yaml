@@ -29,3 +29,5 @@ jobs:
       run: |
         IMAGE_TO_BUILD=$(cat diff.txt | grep '^apps/' | awk -F/ '{print $2}' | sort | uniq)
         echo $IMAGE_TO_BUILD
+
+        docker build -t ${{ env.DOCKERHUB_USERNAME }}/$IMAGE_TO_BUILD:$GITHUB_SHA -f apps/$IMAGE_TO_BUILD/Dockerfile apps/$IMAGE_TO_BUILD
