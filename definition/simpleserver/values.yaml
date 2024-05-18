@@ -4,4 +4,4 @@ namespace: simpleserver
 
 image:
   repository: juanjcsr/simpleserver
-  tag: 3b9afce49d3f21f8c2eaf304a18b2d74b427ea2e
+  tag: d4197ac88b58f500aa7b25d303e6eeb4b5c70de4
