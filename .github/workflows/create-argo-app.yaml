@@ -46,7 +46,7 @@ jobs:
 
     - name: create argo application
       run: |
-        if [ ${{env.image_to_build}} -neq '' ] && [ test -f "charts/{{env.image_to_build}}" ]; then
+        if [ -z "${{env.image_to_build}}" ] && [ -f "charts/{{env.image_to_build}}" ]; then
           echo "file exists"
         fi
 
