@@ -3,7 +3,7 @@ on: [push]
 
 env:
   DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DOCKERHUB_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+  DOCKERHUB_TOKEN: ${{ secrets.DOCKER_KEY }}
 
 jobs:
   build:
