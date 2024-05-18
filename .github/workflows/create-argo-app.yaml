@@ -27,6 +27,7 @@ jobs:
       run: |
         git diff --name-only ${{ github.event.before }} ${{ github.sha }} > diff.txt
         echo "image_to_build=$(cat diff.txt | grep '^apps/' | awk -F/ '{print $2}' | sort | uniq)" >> $GITHUB_OUTPUT
+        echo $image_to_build
         
     - name: Build Docker Image
       run: |
@@ -48,7 +49,7 @@ jobs:
 
     - name: create argo application
       run: |
-        if [ -z "${{env.image_to_build}}" ] && [ -f "charts/{{env.image_to_build}}" ]; then
+        if [ -z "${{env.image_to_build}}" ] && [ -f "charts/${{env.image_to_build}}" ]; then
           echo "file exists"
         fi
 
