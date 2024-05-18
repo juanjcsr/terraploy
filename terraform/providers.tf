@@ -4,6 +4,16 @@ terraform {
       source = "hashicorp/kubernetes"
       version = "2.11.0"
     }
+
+    helm = {
+      source = "hashicorp/helm"
+      version = "2.13.2"
+    }
+
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
   }
 }
 
@@ -17,5 +27,9 @@ provider "helm" {
     config_path = "~/.kube/config"
     config_context = "minikube"
   }
+}
 
+
+provider "aws" {
+  region = "us-west-2"
 }
