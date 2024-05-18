@@ -1,0 +1,5 @@
+---
+# Source: applicationtemplate/templates/chart.yaml
+apiVersion: v2
+name: simpleserver
+version: 1.0.0
