@@ -8,6 +8,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      image_to_build: ${{ steps.get_diff.outputs.image_to_build }}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -30,10 +32,10 @@ jobs:
       run: |
         IMAGE_TO_BUILD=$(cat diff.txt | grep '^apps/' | awk -F/ '{print $2}' | sort | uniq)
         echo "image_to_build=$(echo $IMAGE_TO_BUILD)" >> $GITHUB_ENV
-
+        echo ${{  steps.get_diff.outputs.image_to_build }}
         docker build -t ${{ env.DOCKERHUB_USERNAME }}/$IMAGE_TO_BUILD:$GITHUB_SHA -f apps/$IMAGE_TO_BUILD/Dockerfile apps/$IMAGE_TO_BUILD
       if: |
-        env.image_to_build != ''
+        steps.get_diff.outputs.image_to_build != ''
     - name: Push Docker Image
       run: |
         IMAGE_TO_BUILD=$(cat diff.txt | grep '^apps/' | awk -F/ '{print $2}' | sort | uniq)
@@ -42,7 +44,7 @@ jobs:
         docker push ${{ env.DOCKERHUB_USERNAME }}/$IMAGE_TO_BUILD:$GITHUB_SHA
       if: |
         github.event_name != 'pull_request' &&
-        env.image_to_build != ''
+        steps.get_diff.outputs.image_to_build != ''
 
     - name: create argo application
       run: |
