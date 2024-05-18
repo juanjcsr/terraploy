@@ -51,7 +51,18 @@ jobs:
       run: |
         if [ -z "${{env.image_to_build}}" ] && [ -f "charts/${{env.image_to_build}}" ]; then
           echo "file exists"
+        else
+          echo "file does not exist"
+          mkdir -p charts/${{env.image_to_build}} 
+          helm template charts/defaultapptemplate -s templates/application.yaml --values definition/${{env.image_to_build}}/values.yaml >> charts/root-app/templates/${{env.image_to_build}}.yaml
+          git add charts/root-app/templates/${{env.image_to_build}}.yaml
         fi
+        sed -i 's/tag: latest/tag: '${{ github.sha }}'/g' definition/${{env.image_to_build}}/values.yaml
+        git config --global user.name 'GitHub Actions'
+        git config --global user.email 'actions@github.com'
+        git add definition/${{env.image_to_build}}/values.yaml
+        git commit -m "update ${{env.image_to_build}} image tag"
+        git push
 
       
     
