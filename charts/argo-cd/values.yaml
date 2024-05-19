@@ -1,4 +1,7 @@
 argo-cd:
+  syncPolicy:
+    automated:
+      prune: true
   dex:
     enabled: false
   notifications:
