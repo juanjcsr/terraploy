@@ -1,4 +1,10 @@
 ---
+# Source: defaultapptemplate/templates/namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: simpleserver
+---
 # Source: defaultapptemplate/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -14,11 +20,11 @@ spec:
   template:
     metadata:
       labels:
-        app: nginx
+        app: simpleserver
     spec:
       containers:
         - name: simpleserver
-          image: "juanjcsr/simpleserver:d4197ac88b58f500aa7b25d303e6eeb4b5c70de4"
+          image: "juanjcsr/simpleserver:80d7b31cffa8bf7ba9fc261bd4a3be101d9a1dcf"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
