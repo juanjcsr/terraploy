@@ -84,6 +84,7 @@ jobs:
       id: get_diff
       run: |
         git diff --name-only ${{ github.event.before }} ${{ github.sha }} > diff.txt
+        cat diff.txt
         echo "image_to_build=$(cat diff.txt | grep '^definition/' | awk -F/ '{print $2}' | sort | uniq)" >> $GITHUB_OUTPUT
         echo $image_to_build
     - name: Update Helm Chart
