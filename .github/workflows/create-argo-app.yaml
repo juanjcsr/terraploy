@@ -75,6 +75,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: ${{ always() }}
+    outputs:
+      image_to_build: ${{ steps.get_diff.outputs.image_to_build }}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -94,9 +96,9 @@ jobs:
         git pull
         #git checkout -b update-chart
         #git pull origin update-chart
-        helm template charts/applicationtemplate -s templates/application.yaml --values definition/${{env.image_to_build}}/values.yaml > charts/root-app/templates/${{env.image_to_build}}.yaml
-        git add charts/root-app/templates/${{env.image_to_build}}.yaml
-        git commit -m "update ${{env.image_to_build}} values"
+        helm template ${{steps.get_diff.outputs.image_to_build}} charts/defaultapptemplate --values definition/${{steps.get_diff.outputs.image_to_build}}/values.yaml > charts/${{steps.get_diff.outputs.image_to_build}}/templates/app.yaml
+        git add charts/${{steps.get_diff.outputs.image_to_build}}/templates/app.yaml
+        git commit -m "update ${{steps.get_diff.outputs.image_to_build}} values"
         git push
 
       
