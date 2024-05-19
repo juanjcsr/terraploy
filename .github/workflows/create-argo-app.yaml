@@ -98,6 +98,8 @@ jobs:
         #git pull origin update-chart
         helm template ${{steps.get_diff.outputs.image_to_build}} charts/defaultapptemplate --values definition/${{steps.get_diff.outputs.image_to_build}}/values.yaml > charts/${{steps.get_diff.outputs.image_to_build}}/templates/app.yaml
         git add charts/${{steps.get_diff.outputs.image_to_build}}/templates/app.yaml
+        git config --global user.name 'GitHub Actions'
+        git config --global user.email 'actions@github.com'
         git commit -m "update ${{steps.get_diff.outputs.image_to_build}} values"
         git push
 
