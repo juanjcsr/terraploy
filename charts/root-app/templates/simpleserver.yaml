@@ -19,25 +19,3 @@
 #     automated:
 #       selfHeal: true
 #       prune: true
----
----
-# Source: applicationtemplate/templates/application.yaml
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: simpleserver
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/juanjcsr/terraploy.git
-    path: charts/simpleserver
-    targetRevision: HEAD
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: simpleserver
-  syncPolicy:
-    automated:
-      selfHeal: true
-      prune: true
