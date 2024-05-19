@@ -5,6 +5,21 @@ kind: Namespace
 metadata:
   name: simpleserver
 ---
+# Source: defaultapptemplate/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: simpleserver-service
+  namespace: simpleserver
+spec:
+  selector:
+    app: simpleserver
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
 # Source: defaultapptemplate/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
