@@ -13,7 +13,7 @@ metadata:
   labels:
     app: simpleserver
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: simpleserver
@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: simpleserver
-          image: "juanjcsr/simpleserver:0e4a6f68221d58feeb7419d350aa46b8ae40cd6e"
+          image: "juanjcsr/simpleserver:00ac1b57013c8aac91a19aec9efa32f7614ed29d"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
