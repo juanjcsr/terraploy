@@ -7,3 +7,10 @@ image:
   tag: 00ac1b57013c8aac91a19aec9efa32f7614ed29d
 
 replicas: 10
+
+service:
+  enabled: true
+  type: ClusterIP
+  port: 8080
+  targetPort: 8080
+  protocol: TCP
