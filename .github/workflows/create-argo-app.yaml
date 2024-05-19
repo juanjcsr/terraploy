@@ -64,12 +64,34 @@ jobs:
           git add charts/${{env.image_to_build}}/Chart.yaml
         fi
         sed -i 's/tag: .*/tag: '${{ github.sha }}'/g' definition/${{env.image_to_build}}/values.yaml
-        helm template ${{env.image_to_build}} charts/defaultapptemplate --values definition/${{env.image_to_build}}/values.yaml > charts/${{env.image_to_build}}/templates/app.yaml
-        git add charts/${{env.image_to_build}}/templates/app.yaml
+        #helm template ${{env.image_to_build}} charts/defaultapptemplate --values definition/${{env.image_to_build}}/values.yaml > charts/${{env.image_to_build}}/templates/app.yaml
+        #git add charts/${{env.image_to_build}}/templates/app.yaml
         git config --global user.name 'GitHub Actions'
         git config --global user.email 'actions@github.com'
         git add definition/${{env.image_to_build}}/values.yaml
         git commit -m "update ${{env.image_to_build}} image tag"
+        git push
+  update:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: get diff from definition file
+      id: get_diff
+      run: |
+        git diff --name-only ${{ github.event.before }} ${{ github.sha }} > diff.txt
+        echo "image_to_build=$(cat diff.txt | grep '^definition/' | awk -F/ '{print $2}' | sort | uniq)" >> $GITHUB_OUTPUT
+        echo $image_to_build
+    - name: Update Helm Chart
+      run: |
+        git pull
+        #git checkout -b update-chart
+        #git pull origin update-chart
+        helm template charts/applicationtemplate -s templates/application.yaml --values definition/${{env.image_to_build}}/values.yaml > charts/root-app/templates/${{env.image_to_build}}.yaml
+        git add charts/root-app/templates/${{env.image_to_build}}.yaml
+        git commit -m "update ${{env.image_to_build}} values"
         git push
 
       
