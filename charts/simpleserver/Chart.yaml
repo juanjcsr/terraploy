@@ -3,3 +3,4 @@
 apiVersion: v2
 name: simpleserver
 version: 1.0.1
+type: application
