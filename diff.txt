@@ -1,3 +1,2 @@
-apps/simpleserver/Dockerfile
-apps/simpleserver/go.mod
-apps/simpleserver/main.go
+.github/workflows/create-argo-app.yaml
+definition/simpleserver/values.yaml
