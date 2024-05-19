@@ -1,0 +1,3 @@
+apps/simpleserver/Dockerfile
+apps/simpleserver/go.mod
+apps/simpleserver/main.go

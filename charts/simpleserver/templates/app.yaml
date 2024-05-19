@@ -1,0 +1,26 @@
+---
+# Source: defaultapptemplate/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simpleserver-app
+  labels:
+    app: simpleserver
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: simpleserver
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: simpleserver
+          image: "juanjcsr/simpleserver:d4197ac88b58f500aa7b25d303e6eeb4b5c70de4"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
