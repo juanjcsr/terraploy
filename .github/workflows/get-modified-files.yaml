@@ -1,0 +1,35 @@
+on:
+  workflow_call:
+    inputs:
+      folder_to_watch:
+        required: true
+        type: string
+    outputs:
+      app_to_deploy:
+        description: 'app to deploy'
+        value: ${{ jobs.get_diff.outputs.image_to_build }}
+
+
+jobs:
+  get_diff:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: get changed files
+      uses: tj-actions/changed-files@v44
+      with:
+        files: ${{ github.event.inputs.folder_to_watch }}/**/*
+        write_output_files: true
+    - name: Verify the contents of the .github/outputs/all_changed_and_modified_files file
+      run: |
+        cat .github/outputs/all_changed_and_modified_files.txt
+    - name: get diff from definition file
+      id: get_diff
+      run: |
+        echo "image_to_build=$(cat .github/outputs/all_changed_and_modified_files.txt | grep '^apps/' | awk -F/ '{print $2}' | sort | uniq)" >> $GITHUB_OUTPUT
+        echo "image_to_build=$(echo $image_to_build)" >> $GITHUB_ENV
+        echo $image_to_build
+    
