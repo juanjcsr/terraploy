@@ -79,10 +79,50 @@ image:
 
 replicas: 1 # The number of replicas of the app
 
-service:
-  enabled: false # If the service is enabled
+resources: # The resources of the app
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+
 ```
 
+If you want to enable the service, set `service.enabled` to `true` and describe the service in the `service` section:
 
+```yaml
+...
+service:
+  enabled: true
+  type: ClusterIP
+  port: 80
+  targetPort: 80
 
+```
+
+You can also define limits and requests for the service:
+
+```yaml
+...
+requests:
+  cpu: 100m
+  memory: 128Mi
+limits:
+  cpu: 200m
+  memory: 256Mi
+```
+
+## 4. Add the app to the gitops pipeline
+
+Commit the changes to the gitops repository and push them to the remote repository:
+
+```bash
+git add apps/ definition/
+
+git push origin main
+```
+
+The pipeline will automatically deploy the app to the minikube cluster by default
 
