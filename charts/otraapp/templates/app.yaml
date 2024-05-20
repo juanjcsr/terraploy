@@ -1,0 +1,26 @@
+---
+# Source: defaultapptemplate/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otraapp-app
+  labels:
+    app: otraapp
+spec:
+  replicas: 
+  selector:
+    matchLabels:
+      app: otraapp
+  template:
+    metadata:
+      labels:
+        app: otraapp
+    spec:
+      containers:
+        - name: otraapp
+          image: "juanjcsr/otraapp:10ac498e47b899b32b6053efe479f583d3e619d4"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP

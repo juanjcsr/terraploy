@@ -3,4 +3,4 @@ namespace: otraapp
 
 image:
   repository: juanjcsr/otraapp
-  tag: latest
+  tag: 10ac498e47b899b32b6053efe479f583d3e619d4
