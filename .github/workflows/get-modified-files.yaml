@@ -27,8 +27,8 @@ jobs:
       id: get-diff
       run: |
         cat .github/outputs/all_changed_and_modified_files.txt
-        echo "image_to_build=$(cat .github/outputs/all_changed_and_modified_files.txt | grep -Eo '(apps|definition)/[^/]+' | awk -F/ '{print $2}' | sort | uniq)" >> $GITHUB_OUTPUT
-        echo "image_to_build=$(echo $image_to_build)" >> $GITHUB_ENV
+        image_to_build=$(cat .github/outputs/all_changed_and_modified_files.txt | grep -Eo '(apps|definition)/[^/]+' | awk -F/ '{print $2}' | sort | uniq)
+        echo "image_to_build=$image_to_build" >> $GITHUB_OUTPUT
         echo $image_to_build
        
     
