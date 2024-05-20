@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image_to_build: ${{ steps.get_diff.outputs.image_to_build }}
+
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -28,10 +29,9 @@ jobs:
         username: ${{ env.DOCKERHUB_USERNAME }}
         password: ${{ env.DOCKERHUB_TOKEN }}
     
-    
     - name: get app to build
       id: get_app_to_build
-      uses: ./.github/actions/get-modified-files.yaml
+      uses: ./.github/actions/get-modified-files
       with:
         folder_to_watch: apps
         
@@ -82,11 +82,11 @@ jobs:
     
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - name: get app to build
-      uses: ./.github/actions/get-modified-files.yaml
+      uses: ./.github/actions/get-modified-files
       with:
         folder_to_watch: definition
     - name: Update Helm Chart
