@@ -18,6 +18,7 @@ jobs:
 
   
   build:
+    needs: get-app-to-build
     runs-on: ubuntu-latest
     outputs:
       image_to_build: ${{ steps.get_diff.outputs.image_to_build }}
