@@ -35,6 +35,14 @@ spec:
         - name: simpleserver
           image: "juanjcsr/simpleserver:73742d6a884e3af91c715b0525141eda9956b7e1"
           imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          
           ports:
             - name: http
               containerPort: 8080
