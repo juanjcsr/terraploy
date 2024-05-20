@@ -9,3 +9,8 @@ variable "github_oidc_repo" {
   default     = "repo:juanjcsr/terraploy:*"
   description = "The name of the GitHub repository"
 }
+
+variable "ecr_repos_names" {
+    type        = list(string)
+    description = "The names of the ECR repositories"
+}

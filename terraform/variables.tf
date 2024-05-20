@@ -3,3 +3,4 @@ variable "kube_context" {
     default     = "minikube"
     description = "The name of the Kubernetes context"
 }
+
