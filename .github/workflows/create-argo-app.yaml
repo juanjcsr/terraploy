@@ -91,8 +91,6 @@ jobs:
         needs.get-app-to-build.outputs.app_to_deploy != ''
       run: |
         if [ -z "${{env.app_to_deploy}}" ] && [ -f "charts/${{env.app_to_deploy}}" ]; then
-          echo "file exists"
-        else
           echo "file does not exist"
           mkdir -p charts/${{env.app_to_deploy}} 
           helm template charts/applicationtemplate -s templates/application.yaml --values definition/${{env.app_to_deploy}}/values.yaml > charts/root-app/templates/${{env.app_to_deploy}}.yaml
