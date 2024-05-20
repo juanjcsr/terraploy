@@ -104,7 +104,6 @@ jobs:
           git add charts/${{env.app_to_deploy}}/Chart.yaml
         fi
         sed -i 's/tag: .*/tag: '${{ github.sha }}'/g' definition/${{env.app_to_deploy}}/values.yaml
-        #helm template ${{env.app_to_deploy}} charts/defaultapptemplate --values definition/${{env.app_to_deploy}}/values.yaml > charts/${{env.app_to_deploy}}/templates/app.yaml
         #git add charts/${{env.app_to_deploy}}/templates/app.yaml
         git config --global user.name 'GitHub Actions'
         git config --global user.email 'actions@github.com'
