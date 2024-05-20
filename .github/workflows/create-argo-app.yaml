@@ -57,7 +57,7 @@ jobs:
         needs.get-app-to-build.outputs.app_to_deploy != ''
 
     - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
         aws-region: us-west-2
