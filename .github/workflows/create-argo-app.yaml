@@ -33,11 +33,18 @@ jobs:
       with:
         username: ${{ env.DOCKERHUB_USERNAME }}
         password: ${{ env.DOCKERHUB_TOKEN }}
+
+    - name: validate image to build
+      run: |
+        echo "LOLO"
+        echo ${{  needs.get-app-to-build.outputs.app_to_deploy }}
   
         
     - name: Build Docker Image
       run: |
         IMAGE_TO_BUILD=${{  needs.get-app-to-build.outputs.app_to_deploy }}
+        echo "LOLO"
+        echo ${{  needs.get-app-to-build.outputs.app_to_deploy }}
         echo "image_to_build=$(echo $IMAGE_TO_BUILD)" >> $GITHUB_ENV
         docker build -t ${{ env.DOCKERHUB_USERNAME }}/$IMAGE_TO_BUILD:$GITHUB_SHA -f apps/$IMAGE_TO_BUILD/Dockerfile apps/$IMAGE_TO_BUILD
       if: |
