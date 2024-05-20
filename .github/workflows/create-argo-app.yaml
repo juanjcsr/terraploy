@@ -35,15 +35,15 @@ jobs:
         files: 'apps/**/*'
         write_output_files: true
 
-    - name: Verify the contents of the .github/outputs/added_files.txt file
+    - name: Verify the contents of the .github/outputs/all_changed_and_modified_files file
       run: |
-        cat .github/outputs/added_files.txt
+        cat .github/outputs/all_changed_and_modified_files.txt
 
     - name: get diff from definition file
       id: get_diff
       run: |
         # git diff --name-only ${{ github.event.before }} ${{ github.sha }} > diff.txt
-        echo "image_to_build=$(cat .github/outputs/added_files.txt | grep '^apps/' | awk -F/ '{print $2}' | sort | uniq)" >> $GITHUB_OUTPUT
+        echo "image_to_build=$(cat .github/outputs/all_changed_and_modified_files.txt | grep '^apps/' | awk -F/ '{print $2}' | sort | uniq)" >> $GITHUB_OUTPUT
         echo $image_to_build
         
     - name: Build Docker Image
