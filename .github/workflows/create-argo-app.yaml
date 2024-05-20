@@ -20,6 +20,9 @@ jobs:
   build:
     needs: get-app-to-build
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
     - name: Checkout
@@ -44,7 +47,6 @@ jobs:
     - name: Build Docker Image
       run: |
         IMAGE_TO_BUILD=${{  needs.get-app-to-build.outputs.app_to_deploy }}
-        echo "LOLO"
         echo ${{  needs.get-app-to-build.outputs.app_to_deploy }}
         echo "app_to_deploy=$(echo $IMAGE_TO_BUILD)" >> $GITHUB_ENV
         docker build -t ${{ env.DOCKERHUB_USERNAME }}/$IMAGE_TO_BUILD:$GITHUB_SHA -f apps/$IMAGE_TO_BUILD/Dockerfile apps/$IMAGE_TO_BUILD
@@ -56,6 +58,32 @@ jobs:
       if: |
         github.event_name != 'pull_request' &&
         needs.get-app-to-build.outputs.app_to_deploy != ''
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      if:
+        github.event_name != 'pull_request' 
+      with:
+        role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+        aws-region: us-west-2
+        
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+      if:
+        github.event_name != 'pull_request' 
+
+    - name: Build, tag, and push docker image to Amazon ECR
+      if: |
+        github.event_name != 'pull_request' &&
+        needs.get-app-to-build.outputs.app_to_deploy != ''
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: ${{ needs.get-app-to-build.outputs.app_to_deploy }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
     - name: create argo application
       if: |
