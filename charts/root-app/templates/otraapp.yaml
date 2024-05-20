@@ -1,0 +1,23 @@
+---
+# Source: applicationtemplate/templates/application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: otraapp
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/juanjcsr/terraploy.git
+    path: charts/otraapp
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: otraapp
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    automated:
+      selfHeal: true
+      prune: true
