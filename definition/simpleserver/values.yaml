@@ -6,7 +6,7 @@ image:
   repository: juanjcsr/simpleserver
   tag: 4423d75f40fe8e697877a99cb0b31f685b76d57e
 
-replicas: 10
+replicas: 5
 
 service:
   enabled: true
