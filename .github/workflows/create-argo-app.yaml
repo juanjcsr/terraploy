@@ -85,7 +85,7 @@ jobs:
 
   update:
     runs-on: ubuntu-latest
-    needs: build
+    needs: [get-app-to-build, build]
     if: ${{ always() }}
     
     steps:
@@ -98,8 +98,6 @@ jobs:
         needs.get-app-to-build.outputs.app_to_deploy != ''
       run: |
         git pull
-        #git checkout -b update-chart
-        #git pull origin update-chart
         helm template ${{needs.get-app-to-build.outputs.app_to_deploy}} charts/defaultapptemplate --values definition/${{needs.get-app-to-build.outputs.app_to_deploy}}/values.yaml > charts/${{needs.get-app-to-build.outputs.app_to_deploy}}/templates/app.yaml
         git add charts/${{needs.get-app-to-build.outputs.app_to_deploy}}/templates/app.yaml
         git config --global user.name 'GitHub Actions'
