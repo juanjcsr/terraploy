@@ -44,13 +44,13 @@ jobs:
       run: |
         # git diff --name-only ${{ github.event.before }} ${{ github.sha }} > diff.txt
         echo "image_to_build=$(cat .github/outputs/all_changed_and_modified_files.txt | grep '^apps/' | awk -F/ '{print $2}' | sort | uniq)" >> $GITHUB_OUTPUT
+        echo "image_to_build=$(echo $image_to_build)" >> $GITHUB_ENV
         echo $image_to_build
         
     - name: Build Docker Image
       run: |
-        IMAGE_TO_BUILD=$(cat all_changed_and_modified_files.txt | grep '^apps/' | awk -F/ '{print $2}' | sort | uniq)
+        IMAGE_TO_BUILD=${{  steps.get_diff.outputs.image_to_build }}
         echo "image_to_build=$(echo $IMAGE_TO_BUILD)" >> $GITHUB_ENV
-        echo ${{  steps.get_diff.outputs.image_to_build }}
         docker build -t ${{ env.DOCKERHUB_USERNAME }}/$IMAGE_TO_BUILD:$GITHUB_SHA -f apps/$IMAGE_TO_BUILD/Dockerfile apps/$IMAGE_TO_BUILD
       if: |
         steps.get_diff.outputs.image_to_build != ''
