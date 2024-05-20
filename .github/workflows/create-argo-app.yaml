@@ -102,6 +102,7 @@ jobs:
           git add charts/root-app/templates/$APP_NAME.yaml
           mkdir -p charts/$APP_NAME/templates
           helm template charts/applicationtemplate -s templates/chart.yaml --values definition/simpleserver/values.yaml > charts/$APP_NAME/Chart.yaml
+          touch charts/$APP_NAME/templates/app.yaml
           git add charts/$APP_NAME/
         fi
         sed -i 's/tag: .*/tag: '${{ github.sha }}'/g' definition/$APP_NAME/values.yaml
