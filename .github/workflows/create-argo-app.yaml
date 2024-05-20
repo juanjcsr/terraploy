@@ -37,22 +37,22 @@ jobs:
         
     - name: Build Docker Image
       run: |
-        IMAGE_TO_BUILD=${{  needs.get_app_to_build.outputs.app_to_deploy }}
+        IMAGE_TO_BUILD=${{  needs.get-app-to-build.outputs.app_to_deploy }}
         echo "image_to_build=$(echo $IMAGE_TO_BUILD)" >> $GITHUB_ENV
         docker build -t ${{ env.DOCKERHUB_USERNAME }}/$IMAGE_TO_BUILD:$GITHUB_SHA -f apps/$IMAGE_TO_BUILD/Dockerfile apps/$IMAGE_TO_BUILD
       if: |
-        needs.get_app_to_build.outputs.app_to_deploy != ''
+        needs.get-app-to-build.outputs.app_to_deploy != ''
     - name: Push Docker Image
       run: |
         docker push ${{ env.DOCKERHUB_USERNAME }}/${{env.image_to_build}}:$GITHUB_SHA
       if: |
         github.event_name != 'pull_request' &&
-        needs.get_app_to_build.outputs.app_to_deploy != ''
+        needs.get-app-to-build.outputs.app_to_deploy != ''
 
     - name: create argo application
       if: |
         github.event_name != 'pull_request' &&
-        needs.get_app_to_build.outputs.app_to_deploy != ''
+        needs.get-app-to-build.outputs.app_to_deploy != ''
       run: |
         if [ -z "${{env.image_to_build}}" ] && [ -f "charts/${{env.image_to_build}}" ]; then
           echo "file exists"
@@ -87,16 +87,16 @@ jobs:
         fetch-depth: 0
     - name: Update Helm Chart
       if: |
-        needs.get_app_to_build.outputs.app_to_deploy != ''
+        needs.get-app-to-build.outputs.app_to_deploy != ''
       run: |
         git pull
         #git checkout -b update-chart
         #git pull origin update-chart
-        helm template ${{needs.get_app_to_build.outputs.app_to_deploy}} charts/defaultapptemplate --values definition/${{needs.get_app_to_build.outputs.app_to_deploy}}/values.yaml > charts/${{needs.get_app_to_build.outputs.app_to_deploy}}/templates/app.yaml
-        git add charts/${{needs.get_app_to_build.outputs.app_to_deploy}}/templates/app.yaml
+        helm template ${{needs.get-app-to-build.outputs.app_to_deploy}} charts/defaultapptemplate --values definition/${{needs.get-app-to-build.outputs.app_to_deploy}}/values.yaml > charts/${{needs.get-app-to-build.outputs.app_to_deploy}}/templates/app.yaml
+        git add charts/${{needs.get-app-to-build.outputs.app_to_deploy}}/templates/app.yaml
         git config --global user.name 'GitHub Actions'
         git config --global user.email 'actions@github.com'
-        git commit -m "update ${{needs.get_app_to_build.outputs.app_to_deploy}} values"
+        git commit -m "update ${{needs.get-app-to-build.outputs.app_to_deploy}} values"
         git push
 
       
