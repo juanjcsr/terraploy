@@ -126,3 +126,73 @@ git push origin main
 
 The pipeline will automatically deploy the app to the minikube cluster by default
 
+
+# Design decisions
+
+## Tools used
+
+* Terraform: Infrastructure as code tool used to provision the infrastructure
+* ArgoCD: GitOps continuous delivery tool used to deploy the applications to the Kubernetes cluster
+* Helm: Package manager for Kubernetes used to define the applications in the GitOps repository
+* Minikube: Local Kubernetes cluster used for development and testing
+* GitHub Actions: CI tool used to automate the gitops pipeline
+
+
+### Why ArgoCD?
+
+ArgoCD is a declarative, GitOps continuous delivery tool for Kubernetes. It is a good fit for this project because it allows us to define the desired state of the applications in a Git repository and automatically deploy them to the Kubernetes cluster. It also provides a web interface to manage the applications and the deployments. 
+
+## GitOps repository structure
+
+The GitOps repository is structured as follows:
+
+```
+.
+├── apps
+│   ├── app1
+│   │   └── Dockerfile
+│   └── ...
+├── definition
+│   ├── app1
+│   │   └── values.yaml
+│   └── ...
+├── charts
+│    └── app1
+│        └── Chart.yaml
+│        └── templates
+│            └── app.yaml
+│    └── app2
+│        └── ...
+│    └── ...
+│    └── root-app
+│        └── Chart.yaml
+│        └── templates
+│            └── app1.yaml
+│            └── app2.yaml
+│            └── argocd.yaml
+│            └── root-app.yaml
+│    └── defaultapptemplate
+│        └── Chart.yaml
+│        └── templates
+│    └── applicationtemplate
+│        └── Chart.yaml
+│        └── templates
+├── terraform
+│   ├── modules
+│   │   └── awscloud
+│   │       └── ...
+│       └── kubernetes
+│           └── ...
+└── README.md
+```
+
+* `apps`: Directory where the applications are defined. Each application has its own directory with the Dockerfile. NOTE: For simplicity, each application has its own directory, but in a real-world scenario, the applications would be stored in a separate repository.
+* `definition`: Directory where the applications are described. Each application has its own directory with the `values.yaml` file that describes the application. NOTE: For simplicity, the definition of the applications is stored in the same repository, but in a real-world scenario, the applications would be described in a separate repository holding the definition of all the applications.
+* `charts`: Directory where the Helm charts are defined. Each application has its own directory with the `Chart.yaml` file and the `templates` directory with the `app.yaml` file that defines the application. 
+* * The `root-app` directory contains the `argocd.yaml` file that defines the ArgoCD application and the `root-app.yaml` file that defines the root application (an empty umbrella app). 
+* *  The `defaultapptemplate` directory contains the Helm Kubernetes manifests that can be used within the pipeline. 
+* * The `applicationtemplate` directory contains the Helm chart template for the ArgoCD applications.
+* `terraform`: Directory where the Terraform modules are defined. The `awscloud` module provisions the AWS resources and the `kubernetes` module provisions the Kubernetes resources.
+
+## Pipeline
+
