@@ -15,6 +15,6 @@ func main() {
 func HelloServer(w http.ResponseWriter, r *http.Request) {
 	log.Println("received request")
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "Hello :)  , %s!", r.URL.Path[1:])
+	fmt.Fprintf(w, "Hello :)   , %s!", r.URL.Path[1:])
 
 }
