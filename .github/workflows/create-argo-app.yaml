@@ -48,7 +48,7 @@ jobs:
         
     - name: Build Docker Image
       run: |
-        IMAGE_TO_BUILD=$(cat diff.txt | grep '^apps/' | awk -F/ '{print $2}' | sort | uniq)
+        IMAGE_TO_BUILD=$(cat all_changed_and_modified_files.txt | grep '^apps/' | awk -F/ '{print $2}' | sort | uniq)
         echo "image_to_build=$(echo $IMAGE_TO_BUILD)" >> $GITHUB_ENV
         echo ${{  steps.get_diff.outputs.image_to_build }}
         docker build -t ${{ env.DOCKERHUB_USERNAME }}/$IMAGE_TO_BUILD:$GITHUB_SHA -f apps/$IMAGE_TO_BUILD/Dockerfile apps/$IMAGE_TO_BUILD
@@ -56,10 +56,7 @@ jobs:
         steps.get_diff.outputs.image_to_build != ''
     - name: Push Docker Image
       run: |
-        IMAGE_TO_BUILD=$(cat diff.txt | grep '^apps/' | awk -F/ '{print $2}' | sort | uniq)
-        echo $IMAGE_TO_BUILD
-
-        docker push ${{ env.DOCKERHUB_USERNAME }}/$IMAGE_TO_BUILD:$GITHUB_SHA
+        docker push ${{ env.DOCKERHUB_USERNAME }}/${{env.image_to_build}}:$GITHUB_SHA
       if: |
         github.event_name != 'pull_request' &&
         steps.get_diff.outputs.image_to_build != ''
