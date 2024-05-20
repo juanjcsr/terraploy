@@ -67,7 +67,7 @@ jobs:
         else
           echo "file does not exist"
           mkdir -p charts/${{env.app_to_deploy}} 
-          helm template charts/applicationtemplate -s templates/application.yaml --values definition/${{env.app_to_deploy}}/values.yaml >> charts/root-app/templates/${{env.app_to_deploy}}.yaml
+          helm template charts/applicationtemplate -s templates/application.yaml --values definition/${{env.app_to_deploy}}/values.yaml > charts/root-app/templates/${{env.app_to_deploy}}.yaml
           git add charts/root-app/templates/${{env.app_to_deploy}}.yaml
           mkdir -p charts/${{env.app_to_deploy}}/templates
           helm template charts/applicationtemplate -s templates/chart.yaml --values definition/simpleserver/values.yaml > charts/${{env.app_to_deploy}}/Chart.yaml

@@ -17,7 +17,6 @@ resource "helm_release" "argocd_config" {
     depends_on = [helm_release.argocd]
     name = "argocd-config"
     chart = "../charts/root-app"
-    timeout = 30
 }
 
 resource "null_resource" "clean_up_argocd_resources" {
