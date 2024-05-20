@@ -6,6 +6,15 @@ image:
   repository: juanjcsr/simpleserver
   tag: 73742d6a884e3af91c715b0525141eda9956b7e1
 
+
+limits:
+  cpu: 100m
+  memory: 128Mi
+
+requests:
+  cpu: 100m
+  memory: 128Mi
+
 replicas: 4
 
 service:
