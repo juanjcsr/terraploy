@@ -24,10 +24,8 @@ jobs:
     - name: get changed files
       uses: tj-actions/changed-files@v44
       with:
-        files: |
-          apps/**
-          definition/**
         write_output_files: true
+
     - name: Verify the contents of the .github/outputs/all_changed_and_modified_files file
       id: get-app
       run: |
