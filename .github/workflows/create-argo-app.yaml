@@ -89,25 +89,27 @@ jobs:
         docker push $REGISTRY/terraploy/$REPOSITORY:$IMAGE_TAG
 
     - name: create argo application
+      env:
+        APP_NAME: ${{ needs.get-app-to-build.outputs.app_to_deploy }}
       if: |
         github.event_name != 'pull_request' &&
         needs.get-app-to-build.outputs.app_to_deploy != ''
       run: |
-        if [ ! -z "${{env.app_to_deploy}}" ] && [ ! -f "charts/${{env.app_to_deploy}}" ]; then
+        if [ ! -z "$APP_NAME" ] && [ ! -f "charts/$APP_NAME" ]; then
           echo "file does not exist"
-          mkdir -p charts/${{env.app_to_deploy}} 
-          helm template charts/applicationtemplate -s templates/application.yaml --values definition/${{env.app_to_deploy}}/values.yaml > charts/root-app/templates/${{env.app_to_deploy}}.yaml
-          git add charts/root-app/templates/${{env.app_to_deploy}}.yaml
-          mkdir -p charts/${{env.app_to_deploy}}/templates
-          helm template charts/applicationtemplate -s templates/chart.yaml --values definition/simpleserver/values.yaml > charts/${{env.app_to_deploy}}/Chart.yaml
-          git add charts/${{env.app_to_deploy}}/Chart.yaml
+          mkdir -p charts/$APP_NAME 
+          helm template charts/applicationtemplate -s templates/application.yaml --values definition/$APP_NAME/values.yaml > charts/root-app/templates/$APP_NAME.yaml
+          git add charts/root-app/templates/$APP_NAME.yaml
+          mkdir -p charts/$APP_NAME/templates
+          helm template charts/applicationtemplate -s templates/chart.yaml --values definition/simpleserver/values.yaml > charts/$APP_NAME/Chart.yaml
+          git add charts/$APP_NAME/Chart.yaml
         fi
-        sed -i 's/tag: .*/tag: '${{ github.sha }}'/g' definition/${{env.app_to_deploy}}/values.yaml
-        #git add charts/${{env.app_to_deploy}}/templates/app.yaml
+        sed -i 's/tag: .*/tag: '${{ github.sha }}'/g' definition/$APP_NAME/values.yaml
+        #git add charts/$APP_NAME/templates/app.yaml
         git config --global user.name 'GitHub Actions'
         git config --global user.email 'actions@github.com'
-        git add definition/${{env.app_to_deploy}}/values.yaml
-        git commit -m "update ${{env.app_to_deploy}} image tag"
+        git add definition/$APP_NAME/values.yaml
+        git commit -m "update $APP_NAME image tag"
         git push
 
 
