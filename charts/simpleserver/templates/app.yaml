@@ -39,7 +39,7 @@ spec:
     spec:
       containers:
         - name: simpleserver
-          image: "juanjcsr/simpleserver:25800585f3671a2969b2fdca9f631e7df11b1b1d"
+          image: "juanjcsr/simpleserver:61a83bf817b1506f5be150e5c43d5b938fe7e897"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
