@@ -6,11 +6,12 @@ module "awscloud" {
 
   ecr_repos_names = [
     "simpleserver",
+    "otraapp"
   ]
 }
 
 module "kubernetes" {
   source = "./modules/kubernetes"
 
-  kube_context = "minikube"
+  kube_context = var.kube_context
 }
