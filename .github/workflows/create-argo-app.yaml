@@ -85,10 +85,6 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    - name: get app to build
-      uses: ./.github/workflows/get-modified-files.yaml
-      with:
-        folder_to_watch: definition
     - name: Update Helm Chart
       if: |
         needs.get_app_to_build.outputs.app_to_deploy != ''
