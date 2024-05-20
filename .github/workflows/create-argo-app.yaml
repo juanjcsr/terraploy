@@ -21,7 +21,7 @@ jobs:
     needs: get-app-to-build
     runs-on: ubuntu-latest
     outputs:
-      image_to_build: ${{ steps.get_diff.outputs.image_to_build }}
+      app_to_deploy: ${{ steps.get_diff.outputs.app_to_deploy }}
 
     steps:
     - name: Checkout
@@ -46,13 +46,13 @@ jobs:
         IMAGE_TO_BUILD=${{  needs.get-app-to-build.outputs.app_to_deploy }}
         echo "LOLO"
         echo ${{  needs.get-app-to-build.outputs.app_to_deploy }}
-        echo "image_to_build=$(echo $IMAGE_TO_BUILD)" >> $GITHUB_ENV
+        echo "app_to_deploy=$(echo $IMAGE_TO_BUILD)" >> $GITHUB_ENV
         docker build -t ${{ env.DOCKERHUB_USERNAME }}/$IMAGE_TO_BUILD:$GITHUB_SHA -f apps/$IMAGE_TO_BUILD/Dockerfile apps/$IMAGE_TO_BUILD
       if: |
         needs.get-app-to-build.outputs.app_to_deploy != ''
     - name: Push Docker Image
       run: |
-        docker push ${{ env.DOCKERHUB_USERNAME }}/${{env.image_to_build}}:$GITHUB_SHA
+        docker push ${{ env.DOCKERHUB_USERNAME }}/${{env.app_to_deploy}}:$GITHUB_SHA
       if: |
         github.event_name != 'pull_request' &&
         needs.get-app-to-build.outputs.app_to_deploy != ''
@@ -62,24 +62,24 @@ jobs:
         github.event_name != 'pull_request' &&
         needs.get-app-to-build.outputs.app_to_deploy != ''
       run: |
-        if [ -z "${{env.image_to_build}}" ] && [ -f "charts/${{env.image_to_build}}" ]; then
+        if [ -z "${{env.app_to_deploy}}" ] && [ -f "charts/${{env.app_to_deploy}}" ]; then
           echo "file exists"
         else
           echo "file does not exist"
-          mkdir -p charts/${{env.image_to_build}} 
-          helm template charts/applicationtemplate -s templates/application.yaml --values definition/${{env.image_to_build}}/values.yaml >> charts/root-app/templates/${{env.image_to_build}}.yaml
-          git add charts/root-app/templates/${{env.image_to_build}}.yaml
-          mkdir -p charts/${{env.image_to_build}}/templates
-          helm template charts/applicationtemplate -s templates/chart.yaml --values definition/simpleserver/values.yaml > charts/${{env.image_to_build}}/Chart.yaml
-          git add charts/${{env.image_to_build}}/Chart.yaml
+          mkdir -p charts/${{env.app_to_deploy}} 
+          helm template charts/applicationtemplate -s templates/application.yaml --values definition/${{env.app_to_deploy}}/values.yaml >> charts/root-app/templates/${{env.app_to_deploy}}.yaml
+          git add charts/root-app/templates/${{env.app_to_deploy}}.yaml
+          mkdir -p charts/${{env.app_to_deploy}}/templates
+          helm template charts/applicationtemplate -s templates/chart.yaml --values definition/simpleserver/values.yaml > charts/${{env.app_to_deploy}}/Chart.yaml
+          git add charts/${{env.app_to_deploy}}/Chart.yaml
         fi
-        sed -i 's/tag: .*/tag: '${{ github.sha }}'/g' definition/${{env.image_to_build}}/values.yaml
-        #helm template ${{env.image_to_build}} charts/defaultapptemplate --values definition/${{env.image_to_build}}/values.yaml > charts/${{env.image_to_build}}/templates/app.yaml
-        #git add charts/${{env.image_to_build}}/templates/app.yaml
+        sed -i 's/tag: .*/tag: '${{ github.sha }}'/g' definition/${{env.app_to_deploy}}/values.yaml
+        #helm template ${{env.app_to_deploy}} charts/defaultapptemplate --values definition/${{env.app_to_deploy}}/values.yaml > charts/${{env.app_to_deploy}}/templates/app.yaml
+        #git add charts/${{env.app_to_deploy}}/templates/app.yaml
         git config --global user.name 'GitHub Actions'
         git config --global user.email 'actions@github.com'
-        git add definition/${{env.image_to_build}}/values.yaml
-        git commit -m "update ${{env.image_to_build}} image tag"
+        git add definition/${{env.app_to_deploy}}/values.yaml
+        git commit -m "update ${{env.app_to_deploy}} image tag"
         git push
 
 

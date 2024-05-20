@@ -3,14 +3,14 @@ on:
     outputs:
       app_to_deploy:
         description: 'app to deploy'
-        value: ${{ jobs.get-diff.outputs.image_to_build }}
+        value: ${{ jobs.get-diff.outputs.app_to_deploy }}
 
 
 jobs:
   get_diff:
     runs-on: ubuntu-latest
     outputs:
-      image_to_build: ${{ steps.get-diff.outputs.image_to_build }}
+      app_to_deploy: ${{ steps.get-diff.outputs.app_to_deploy }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -27,8 +27,8 @@ jobs:
       id: get-diff
       run: |
         cat .github/outputs/all_changed_and_modified_files.txt
-        image_to_build=$(cat .github/outputs/all_changed_and_modified_files.txt | grep -Eo '(apps|definition)/[^/]+' | awk -F/ '{print $2}' | sort | uniq)
-        echo "image_to_build=$image_to_build" >> $GITHUB_OUTPUT
-        echo $image_to_build
+        app_to_deploy=$(cat .github/outputs/all_changed_and_modified_files.txt | grep -Eo '(apps|definition)/[^/]+' | awk -F/ '{print $2}' | sort | uniq)
+        echo "app_to_deploy=$app_to_deploy" >> $GITHUB_OUTPUT
+        echo $app_to_deploy
        
     
