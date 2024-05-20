@@ -6,6 +6,6 @@ variable "ecr_repo_name" {
 
 variable "github_oidc_repo" {
   type        = string
-  default     = "repo:juanjcsr/terraploy"
+  default     = "repo:juanjcsr/terraploy:*"
   description = "The name of the GitHub repository"
 }
