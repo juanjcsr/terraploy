@@ -50,6 +50,7 @@ jobs:
         echo ${{  needs.get-app-to-build.outputs.app_to_deploy }}
         echo "app_to_deploy=$(echo $IMAGE_TO_BUILD)" >> $GITHUB_ENV
         docker build -t ${{ env.DOCKERHUB_USERNAME }}/$IMAGE_TO_BUILD:$GITHUB_SHA -f apps/$IMAGE_TO_BUILD/Dockerfile apps/$IMAGE_TO_BUILD
+        sed -i 's/tag: .*/tag: '${{ github.sha }}'/g' definition/$APP_NAME/values.yaml
       if: |
         needs.get-app-to-build.outputs.app_to_deploy != '' &&
         needs.get-app-to-build.outputs.is_app == 'apps'
@@ -105,7 +106,7 @@ jobs:
           touch charts/$APP_NAME/templates/app.yaml
           git add charts/$APP_NAME/
         fi
-        sed -i 's/tag: .*/tag: '${{ github.sha }}'/g' definition/$APP_NAME/values.yaml
+        
         #git add charts/$APP_NAME/templates/app.yaml
         git config --global user.name 'GitHub Actions'
         git config --global user.email 'actions@github.com'
