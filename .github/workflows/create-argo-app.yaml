@@ -51,13 +51,15 @@ jobs:
         echo "app_to_deploy=$(echo $IMAGE_TO_BUILD)" >> $GITHUB_ENV
         docker build -t ${{ env.DOCKERHUB_USERNAME }}/$IMAGE_TO_BUILD:$GITHUB_SHA -f apps/$IMAGE_TO_BUILD/Dockerfile apps/$IMAGE_TO_BUILD
       if: |
-        needs.get-app-to-build.outputs.app_to_deploy != ''
+        needs.get-app-to-build.outputs.app_to_deploy != '' &&
+        needs.get-app-to-build.outputs.is_app == 'apps'
     - name: Push Docker Image
       run: |
         docker push ${{ env.DOCKERHUB_USERNAME }}/${{env.app_to_deploy}}:$GITHUB_SHA
       if: |
         github.event_name != 'pull_request' &&
-        needs.get-app-to-build.outputs.app_to_deploy != ''
+        needs.get-app-to-build.outputs.app_to_deploy != '' &&
+        needs.get-app-to-build.outputs.is_app == 'apps'
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -76,7 +78,8 @@ jobs:
     - name: Build, tag, and push docker image to Amazon ECR
       if: |
         github.event_name != 'pull_request' &&
-        needs.get-app-to-build.outputs.app_to_deploy != ''
+        needs.get-app-to-build.outputs.app_to_deploy != '' &&
+        needs.get-app-to-build.outputs.is_app == 'apps'
       env:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         REPOSITORY: ${{ needs.get-app-to-build.outputs.app_to_deploy }}
@@ -88,7 +91,8 @@ jobs:
     - name: create argo application
       if: |
         github.event_name != 'pull_request' &&
-        needs.get-app-to-build.outputs.app_to_deploy != ''
+        needs.get-app-to-build.outputs.app_to_deploy != '' &&
+        needs.get-app-to-build.outputs.is_app == 'apps'
       run: |
         if [ -z "${{env.app_to_deploy}}" ] && [ -f "charts/${{env.app_to_deploy}}" ]; then
           echo "file does not exist"
@@ -121,7 +125,8 @@ jobs:
         fetch-depth: 0
     - name: Update Helm Chart
       if: |
-        needs.get-app-to-build.outputs.app_to_deploy != ''
+        needs.get-app-to-build.outputs.app_to_deploy != '' &&
+        needs.get-app-to-build.outputs.is_app == 'apps'
       run: |
         git pull
         helm template ${{needs.get-app-to-build.outputs.app_to_deploy}} charts/defaultapptemplate --values definition/${{needs.get-app-to-build.outputs.app_to_deploy}}/values.yaml > charts/${{needs.get-app-to-build.outputs.app_to_deploy}}/templates/app.yaml

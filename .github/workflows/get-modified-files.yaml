@@ -4,6 +4,9 @@ on:
       app_to_deploy:
         description: 'app to deploy'
         value: ${{ jobs.get_diff.outputs.app_to_deploy }}
+      is_app:
+        description: 'is app change to deploy'
+        value: ${{ jobs.get_diff.outputs.is_app }}
 
 
 jobs:
@@ -11,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       app_to_deploy: ${{ steps.get-app.outputs.app_to_deploy }}
+      is_app: ${{ steps.get-app-change.outputs.is_app }}
+      
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -30,5 +35,12 @@ jobs:
         app_to_deploy=$(cat .github/outputs/all_changed_and_modified_files.txt | grep -Eo '(apps|definition)/[^/]+' | awk -F/ '{print $2}' | sort | uniq)
         echo "app_to_deploy=$app_to_deploy" >> $GITHUB_OUTPUT
         echo $app_to_deploy
+    - name: Set variable only on apps change
+      id: get-app-change
+      run: |
+        cat .github/outputs/all_changed_and_modified_files.txt
+        is_app=$(cat .github/outputs/all_changed_and_modified_files.txt | grep -Eo '(apps)/[^/]+' | awk -F/ '{print $1}' | sort | uniq)
+        echo "is_app=$is_app" >> $GITHUB_OUTPUT
+        echo $is_app
        
     
