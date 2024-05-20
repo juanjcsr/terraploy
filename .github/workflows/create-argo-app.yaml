@@ -31,7 +31,7 @@ jobs:
     
     - name: get app to build
       id: get_app_to_build
-      uses: ./.github/actions/get-modified-files
+      uses: ./.github/workflows/get-modified-files.yaml
       with:
         folder_to_watch: apps
         
@@ -86,7 +86,7 @@ jobs:
       with:
         fetch-depth: 0
     - name: get app to build
-      uses: ./.github/actions/get-modified-files
+      uses: ./.github/workflows/get-modified-files.yaml
       with:
         folder_to_watch: definition
     - name: Update Helm Chart
