@@ -1,0 +1,34 @@
+on:
+  workflow_call:
+    outputs:
+      app_to_deploy:
+        description: 'app to deploy'
+        value: ${{ jobs.get_diff.outputs.app_to_deploy }}
+
+
+jobs:
+  get_diff:
+    runs-on: ubuntu-latest
+    outputs:
+      app_to_deploy: ${{ steps.get-app.outputs.app_to_deploy }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: get changed files
+      uses: tj-actions/changed-files@v44
+      with:
+        files: |
+          apps/**
+          definition/**
+        write_output_files: true
+    - name: Verify the contents of the .github/outputs/all_changed_and_modified_files file
+      id: get-app
+      run: |
+        cat .github/outputs/all_changed_and_modified_files.txt
+        app_to_deploy=$(cat .github/outputs/all_changed_and_modified_files.txt | grep -Eo '(apps|definition)/[^/]+' | awk -F/ '{print $2}' | sort | uniq)
+        echo "app_to_deploy=$app_to_deploy" >> $GITHUB_OUTPUT
+        echo $app_to_deploy
+       
+    
