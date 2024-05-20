@@ -28,11 +28,22 @@ jobs:
         username: ${{ env.DOCKERHUB_USERNAME }}
         password: ${{ env.DOCKERHUB_TOKEN }}
     
+    
+    - name: get changed files
+      uses: tj-actions/changed-files@v44
+      with:
+        files: 'apps/**/*'
+        write_output_files: true
+
+    - name: Verify the contents of the .github/outputs/added_files.txt file
+      run: |
+        cat .github/outputs/added_files.txt
+
     - name: get diff from definition file
       id: get_diff
       run: |
-        git diff --name-only ${{ github.event.before }} ${{ github.sha }} > diff.txt
-        echo "image_to_build=$(cat diff.txt | grep '^apps/' | awk -F/ '{print $2}' | sort | uniq)" >> $GITHUB_OUTPUT
+        # git diff --name-only ${{ github.event.before }} ${{ github.sha }} > diff.txt
+        echo "image_to_build=$(cat .github/outputs/added_files.txt | grep '^apps/' | awk -F/ '{print $2}' | sort | uniq)" >> $GITHUB_OUTPUT
         echo $image_to_build
         
     - name: Build Docker Image
