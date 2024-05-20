@@ -1,0 +1,6 @@
+appName: otraapp
+namespace: otraapp
+
+image:
+  repository: juanjcsr/otraapp
+  tag: latest
