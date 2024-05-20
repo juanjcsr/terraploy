@@ -126,7 +126,6 @@ jobs:
     - name: Update Helm Chart
       if: |
         needs.get-app-to-build.outputs.app_to_deploy != '' &&
-        needs.get-app-to-build.outputs.is_app == 'apps'
       run: |
         git pull
         helm template ${{needs.get-app-to-build.outputs.app_to_deploy}} charts/defaultapptemplate --values definition/${{needs.get-app-to-build.outputs.app_to_deploy}}/values.yaml > charts/${{needs.get-app-to-build.outputs.app_to_deploy}}/templates/app.yaml
