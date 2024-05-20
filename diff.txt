@@ -1,2 +1,3 @@
-.github/workflows/create-argo-app.yaml
-definition/simpleserver/values.yaml
+apps/simpleserver/main.go
+lolo/ferfe/asddsf
+definition/simpleserver/loo
