@@ -20,14 +20,17 @@ jobs:
   build:
     needs: get-app-to-build
     runs-on: ubuntu-latest
-    outputs:
-      app_to_deploy: ${{ steps.get_diff.outputs.app_to_deploy }}
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
+
+    - name: validate image to build
+      run: |
+        echo "LOLO"
+        echo ${{  needs.get-app-to-build.outputs.app_to_deploy }}
     
     - name: Login to DockerHub
       uses: docker/login-action@v2
@@ -35,10 +38,7 @@ jobs:
         username: ${{ env.DOCKERHUB_USERNAME }}
         password: ${{ env.DOCKERHUB_TOKEN }}
 
-    - name: validate image to build
-      run: |
-        echo "LOLO"
-        echo ${{  needs.get-app-to-build.outputs.app_to_deploy }}
+    
   
         
     - name: Build Docker Image
