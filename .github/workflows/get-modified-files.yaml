@@ -1,9 +1,5 @@
 on:
   workflow_call:
-    inputs:
-      folder_to_watch:
-        required: true
-        type: string
     outputs:
       app_to_deploy:
         description: 'app to deploy'
@@ -21,7 +17,9 @@ jobs:
     - name: get changed files
       uses: tj-actions/changed-files@v44
       with:
-        files: ${{ github.event.inputs.folder_to_watch }}/**/*
+        files: |
+          apps/**
+          definition/**
         write_output_files: true
     - name: Verify the contents of the .github/outputs/all_changed_and_modified_files file
       run: |
