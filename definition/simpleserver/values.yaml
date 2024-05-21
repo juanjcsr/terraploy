@@ -19,7 +19,7 @@ replicas: 4
 
 service:
   enabled: true
-  type: ClusterIP
+  type: NodePort
   port: 8080
   targetPort: 8080
   protocol: TCP
