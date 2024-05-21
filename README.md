@@ -279,6 +279,7 @@ The GitOps repository is structured as follows:
 * Add terraform to provision a EKS cluster
 * Add environments to the pipeline (dev, staging, production)
 * Use ECR for the production environment
+* Automatically create the ECR repositories in the pipeline
 * The pipeline only accepts a fixed set of kubernetes resources:
     * Deployment
     * Service
