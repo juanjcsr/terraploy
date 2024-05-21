@@ -16,7 +16,11 @@ jobs:
   get-app-to-build:
     uses: ./.github/workflows/get-modified-files.yaml
 
-  
+
+  # This job builds the docker image, runs a vulnerability scan 
+  # with trivy and pushes it to DockerHub and ECR
+  # 
+  # It also creates a helm chart for the application and pushes it to the repo
   build:
     needs: get-app-to-build
     runs-on: ubuntu-latest
@@ -117,7 +121,6 @@ jobs:
           touch charts/$APP_NAME/templates/app.yaml
           git add charts/$APP_NAME/
         fi
-        
         #git add charts/$APP_NAME/templates/app.yaml
         git config --global user.name 'GitHub Actions'
         git config --global user.email 'actions@github.com'

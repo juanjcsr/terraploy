@@ -22,7 +22,7 @@
 
 # Design considerations
 
-The goal of this project is to create an automated pipeline that takes a Dockerized application and deploys it to a Kubernetes cluster using GitOps. To automate the pipeline, I used GitHub Actions to build the Docker image and push it to Dockerhub and ECR. I used ArgoCD to deploy the application to the Kubernetes cluster. 
+The goal of this project is to create an automated pipeline that takes a Dockerized application and deploys it to a Kubernetes cluster using GitOps. To automate the pipeline, I used **GitHub Actions** to build the Docker image and push it to Dockerhub and ECR. I used ArgoCD to deploy the application to the Kubernetes cluster. 
 
 This project is **not** intended to be a production-ready pipeline but rather a proof of concept to demonstrate how to automate provision and deployment of applications to a Kubernetes cluster using GitOps. 
 
@@ -35,7 +35,7 @@ The GitOps pipeline is designed to run only in the main branch of the repository
 ## 1.1 Requirements to provision the pipeline
 
 * Terraform
-* A minikube kubernetes cluster 
+* A minikube kubernetes cluster with the metrics server enabled
 * A configured AWS account with ECR and IAM permissions
 
 ## 1.2 Requirements to run the pipeline
@@ -155,6 +155,20 @@ limits:
   memory: 256Mi
 ```
 
+It is also possible to define a Horizontal Pod Autoscaler for the app:
+
+```yaml
+...
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+    cpu:
+      enabled: true
+      targetAverageUtilization: 50
+```
+
 ## 4. Add the app to the gitops pipeline
 
 Commit the changes to the gitops repository and push them to the remote repository:
@@ -257,4 +271,3 @@ The GitOps repository is structured as follows:
   * The first stage builds the Docker image and pushes it to Dockerhub and ECR.
   * The second stage deploys the application to the Kubernetes cluster using ArgoCD.
 * ArgoCD continuously monitors the GitOps repository and automatically deploys the applications to the Kubernetes cluster.
-
