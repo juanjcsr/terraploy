@@ -19,6 +19,7 @@
     + [Why ArgoCD?](#why-argocd)
   * [GitOps repository structure](#gitops-repository-structure)
   * [Pipeline architecture](#pipeline-architecture)
+- [Improvements](#improvements)
 
 # Design considerations
 
@@ -275,3 +276,17 @@ The GitOps repository is structured as follows:
 
 # Improvements
 
+* Add terraform to provision a EKS cluster
+* Add environments to the pipeline (dev, staging, production)
+* Use ECR for the production environment
+* The pipeline only accepts a fixed set of kubernetes resources:
+    * Deployment
+    * Service
+    * Horizontal Pod Autoscaler
+    * More resources need to be added manually first to `charts/defaultapptemplate/templates`
+* Add more resources to the pipeline (e.g., Ingress, ConfigMap, Secret...)
+* Use Kustomize to manage the Kubernetes resources
+* Add validations to the helm charts: 
+    * Linting
+    * Testing
+* Add a rollback strategy to the pipeline
