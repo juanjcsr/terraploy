@@ -40,8 +40,6 @@ jobs:
         username: ${{ env.DOCKERHUB_USERNAME }}
         password: ${{ env.DOCKERHUB_TOKEN }}
 
-    
-  
         
     - name: Build Docker Image
       run: |
@@ -53,6 +51,20 @@ jobs:
       if: |
         needs.get-app-to-build.outputs.app_to_deploy != '' &&
         needs.get-app-to-build.outputs.is_app == 'apps'
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: '${{ env.DOCKERHUB_USERNAME }}/${{env.app_to_deploy}}:$GITHUB_SHA'
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH'
+      if: |
+        needs.get-app-to-build.outputs.app_to_deploy != '' &&
+        needs.get-app-to-build.outputs.is_app == 'apps'
+
     - name: Push Docker Image
       run: |
         docker push ${{ env.DOCKERHUB_USERNAME }}/${{env.app_to_deploy}}:$GITHUB_SHA
