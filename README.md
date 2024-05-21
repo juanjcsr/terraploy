@@ -1,3 +1,35 @@
+
+# GitOps pipeline for Kubernetes
+
+# Table of contents
+
+- [Design considerations](#design-considerations)
+- [How to run the pipeline](#how-to-run-the-pipeline)
+  * [1.1 Requirements to provision the pipeline](#11-requirements-to-provision-the-pipeline)
+  * [1.2 Requirements to run the pipeline](#12-requirements-to-run-the-pipeline)
+  * [2. Provision the infrastructure and install the gitops pipeline](#2-provision-the-infrastructure-and-install-the-gitops-pipeline)
+    + [2.1 Get the gitops configuration](#21-get-the-gitops-configuration)
+- [How to add a new app](#how-to-add-a-new-app)
+  * [1. Create a new app in ECR via terraform:](#1-create-a-new-app-in-ecr-via-terraform)
+  * [2. Create a new app in the gitops repository](#2-create-a-new-app-in-the-gitops-repository)
+  * [3. Describe the app in "definition"](#3-describe-the-app-in-definition)
+  * [4. Add the app to the gitops pipeline](#4-add-the-app-to-the-gitops-pipeline)
+- [Design decisions](#design-decisions)
+  * [Tools used](#tools-used)
+    + [Why ArgoCD?](#why-argocd)
+  * [GitOps repository structure](#gitops-repository-structure)
+  * [Pipeline architecture](#pipeline-architecture)
+
+# Design considerations
+
+The goal of this project is to create an automated pipeline that takes a Dockerized application and deploys it to a Kubernetes cluster using GitOps. To automate the pipeline, I used GitHub Actions to build the Docker image and push it to Dockerhub and ECR. I used ArgoCD to deploy the application to the Kubernetes cluster. 
+
+This project is **not** intended to be a production-ready pipeline but rather a proof of concept to demonstrate how to automate provision and deployment of applications to a Kubernetes cluster using GitOps. 
+
+This pipeline is designed to be run in a local minikube cluster. The pipeline provisions the infrastructure using Terraform and deploys the applications to the Kubernetes cluster using ArgoCD. 
+
+The GitOps pipeline is designed to run only in the main branch of the repository. The pipeline is triggered by a change in the `/apps` or `/definition` directories in the GitOps repository. 
+
 # How to run the pipeline
 
 ## 1.1 Requirements to provision the pipeline
@@ -203,5 +235,26 @@ The GitOps repository is structured as follows:
 * * The `applicationtemplate` directory contains the Helm chart template for the ArgoCD applications.
 * `terraform`: Directory where the Terraform modules are defined. The `awscloud` module provisions the AWS resources and the `kubernetes` module provisions the Kubernetes resources.
 
-## Pipeline
+## Pipeline architecture
+
+```
+
++-----------------+       +-----------------+       +-----------------+       +-----------------+           
+| Change in /apps | ----> | GitHub Actions  | ----> |   Push to       | ----> | Push to         |
+| or /definition  |       |                 |       |  Dockerhub      |       |  ECR Repo       |      
++-----------------+       +-----------------+       +-----------------+       +-----------------+        
+                                  │
+                                  │
+                                  │
+                          +-----------------+       +-----------------+
+                          | Deploy in       | ----> | Update K8s      |
+                          | Argo CD         |       | Objects         |
+                          +-----------------+       +-----------------+ 
+```
+
+* The pipeline is triggered by a change in the `/apps` or `/definition` directories in the GitOps repository.
+* The pipeline is defined in GitHub Actions and consists of two stages: 
+  * The first stage builds the Docker image and pushes it to Dockerhub and ECR.
+  * The second stage deploys the application to the Kubernetes cluster using ArgoCD.
+* ArgoCD continuously monitors the GitOps repository and automatically deploys the applications to the Kubernetes cluster.
 
