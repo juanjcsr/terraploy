@@ -55,7 +55,7 @@ jobs:
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: '${{ env.DOCKERHUB_USERNAME }}/${{env.app_to_deploy}}:$GITHUB_SHA'
+        image-ref: '${{ env.DOCKERHUB_USERNAME }}/${{env.app_to_deploy}}:${{ github.sha }}'
         format: 'table'
         exit-code: '1'
         ignore-unfixed: true
@@ -67,7 +67,7 @@ jobs:
 
     - name: Push Docker Image
       run: |
-        docker push ${{ env.DOCKERHUB_USERNAME }}/${{env.app_to_deploy}}:${{ github.sha }}
+        docker push ${{ env.DOCKERHUB_USERNAME }}/${{env.app_to_deploy}}:$GITHUB_SHA
       if: |
         github.event_name != 'pull_request' &&
         needs.get-app-to-build.outputs.app_to_deploy != '' &&
