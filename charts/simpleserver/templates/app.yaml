@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
         - name: simpleserver
-          image: "juanjcsr/simpleserver:73742d6a884e3af91c715b0525141eda9956b7e1"
+          image: "juanjcsr/simpleserver:3b3f10d20bcef5953d1767e4cc94eece19718433"
           imagePullPolicy: IfNotPresent
           resources:
             requests:
