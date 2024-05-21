@@ -67,7 +67,7 @@ jobs:
 
     - name: Push Docker Image
       run: |
-        docker push ${{ env.DOCKERHUB_USERNAME }}/${{env.app_to_deploy}}:$GITHUB_SHA
+        docker push ${{ env.DOCKERHUB_USERNAME }}/${{env.app_to_deploy}}:${{ github.sha }}
       if: |
         github.event_name != 'pull_request' &&
         needs.get-app-to-build.outputs.app_to_deploy != '' &&
