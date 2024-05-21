@@ -32,7 +32,6 @@ jobs:
 
     - name: validate image to build
       run: |
-        echo "LOLO"
         echo ${{  needs.get-app-to-build.outputs.app_to_deploy }}
     
     - name: Login to DockerHub

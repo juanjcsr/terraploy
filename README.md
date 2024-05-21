@@ -1,8 +1,20 @@
 # How to run the pipeline
 
-## 1. Install the required packages and set the dependencies
-```bash
-```
+## 1.1 Requirements to provision the pipeline
+
+* Terraform
+* A minikube kubernetes cluster 
+* A configured AWS account with ECR and IAM permissions
+
+## 1.2 Requirements to run the pipeline
+
+* A GitHub account and a repo (It's currently running in `juanjcsr/terraploy`). 
+* A Dockerhub account. By default it's currently pushing to my account https://hub.docker.com/repositories/juanjcsr  
+* Github repo configured with the following secrets:
+  * `DOCKER_USERNAME`: Dockerhub username
+  * `DOCKER_KEY`: Dockerhub password
+  * `AWS_ROLE_TO_ASSUME`: The ARN of the OIDC role to assume in the AWS account (the role should have permissions to create ECR repositories ). This role is provisioned after running the terraform pipeline.
+
 
 ## 2. Provision the infrastructure and install the gitops pipeline
 ```bash
@@ -29,15 +41,12 @@ Access the pipeline at http://localhost:8080
 
 ## 1. Create a new app in ECR via terraform:
 
-Append to the `terraform/main.tf` file:
+Append to the `terraform/terraform.auto.tfvars` file:
 ```hcl
-module "awscloud" {
-    ...
-    ecr_repos_names = [
-        ...
-        "NEW_APP_NAME"
-    ]
-}
+ecr_repos_names = [
+  "simpleserver",
+  "NEW_APP_NAME"
+]
 
 ```
 
