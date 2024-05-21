@@ -27,7 +27,7 @@ The goal of this project is to create an automated pipeline that takes a Dockeri
 
 This project is **not** intended to be a production-ready pipeline but rather a proof of concept to demonstrate how to automate provision and deployment of applications to a Kubernetes cluster using GitOps. 
 
-This pipeline is designed to be run in a local minikube cluster. The pipeline provisions the infrastructure using Terraform and deploys the applications to the Kubernetes cluster using ArgoCD. 
+This pipeline is designed to be run in a **local minikube cluster**. The pipeline provisions the infrastructure using Terraform and deploys the applications to the Kubernetes cluster using ArgoCD. 
 
 The GitOps pipeline is designed to run only in the main branch of the repository. The pipeline is triggered by a change in the `/apps` or `/definition` directories in the GitOps repository. 
 
@@ -37,7 +37,7 @@ The GitOps pipeline is designed to run only in the main branch of the repository
 
 * Terraform
 * A minikube kubernetes cluster with the metrics server enabled
-* A configured AWS account with ECR and IAM permissions
+* A locally configured AWS CLI with ECR and IAM permissions
 
 ## 1.2 Requirements to run the pipeline
 
@@ -46,7 +46,7 @@ The GitOps pipeline is designed to run only in the main branch of the repository
 * Github repo configured with the following secrets:
   * `DOCKER_USERNAME`: Dockerhub username
   * `DOCKER_KEY`: Dockerhub password
-  * `AWS_ROLE_TO_ASSUME`: The ARN of the OIDC role to assume in the AWS account (the role should have permissions to create ECR repositories ). This role is provisioned after running the terraform pipeline.
+  * `AWS_ROLE_TO_ASSUME`: (as a variable) The ARN of the OIDC role to assume in the AWS account (the role should have permissions to create ECR repositories). This role is provisioned after running the terraform pipeline.
 
 
 ## 2. Provision the infrastructure and install the gitops pipeline
@@ -273,6 +273,16 @@ The GitOps repository is structured as follows:
   * The second stage deploys the application to the Kubernetes cluster using ArgoCD.
 * ArgoCD continuously monitors the GitOps repository and automatically deploys the applications to the Kubernetes cluster.
 
+# Checking simpleserver output
+
+An example `simpleserver` app is deployed in the minikube cluster. It's definition is in the `definition/simpleserver/values.yaml` file and the app lives in the `apps/simpleserver` directory. It's exposed as a service in the `simpleserver` namespace.
+
+To check the output of the simpleserver app, run the following command:
+
+```bash
+kubectl port-forward svc/simpleserver-service 8080:8080 -n simpleserver
+```
+![simpleserver app](simpleserverout.png)
 
 # Improvements
 
