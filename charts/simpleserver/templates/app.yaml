@@ -34,7 +34,7 @@ spec:
       containers:
         - name: simpleserver
           image: "juanjcsr/simpleserver:3b3f10d20bcef5953d1767e4cc94eece19718433"
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           resources:
             requests:
               cpu: 100m
@@ -47,3 +47,31 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+---
+# Source: defaultapptemplate/templates/hpa.yaml
+# This is the Horizontal Pod Autoscaler (HPA) configuration file.
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: simpleserver-hpa
+  namespace: simpleserver
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: simpleserver-app
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target: 
+          type: Utilization
+          averageUtilization: 50
+    - type: Resource
+      resource:
+        name: memory
+        target: 
+          type: Utilization
+          averageUtilization: 50
