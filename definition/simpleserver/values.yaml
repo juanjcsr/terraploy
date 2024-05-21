@@ -23,3 +23,15 @@ service:
   port: 8080
   targetPort: 8080
   protocol: TCP
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+    cpu:
+      enabled: true
+      targetAverageUtilization: 50
+    memory:
+      enabled: true
+      targetAverageUtilization: 50
