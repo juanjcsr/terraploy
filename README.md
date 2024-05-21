@@ -19,6 +19,7 @@
     + [Why ArgoCD?](#why-argocd)
   * [GitOps repository structure](#gitops-repository-structure)
   * [Pipeline architecture](#pipeline-architecture)
+- [Checking simpleserver output](#checking-simpleserver-output)
 - [Improvements](#improvements)
 
 # Design considerations
