@@ -271,3 +271,7 @@ The GitOps repository is structured as follows:
   * The first stage builds the Docker image and pushes it to Dockerhub and ECR.
   * The second stage deploys the application to the Kubernetes cluster using ArgoCD.
 * ArgoCD continuously monitors the GitOps repository and automatically deploys the applications to the Kubernetes cluster.
+
+
+# Improvements
+
