@@ -33,5 +33,3 @@ No resources.
 ## Outputs
 
 No outputs.
-
-Other deploy
