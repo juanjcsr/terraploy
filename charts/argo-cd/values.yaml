@@ -4,6 +4,8 @@ argo-cd:
       prune: true
   dex:
     enabled: false
+  deploymentAnnotations:
+    linkerd.io/inject: enabled
   notifications:
     enabled: false
   applicationSet:
