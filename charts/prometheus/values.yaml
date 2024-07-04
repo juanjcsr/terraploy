@@ -514,7 +514,8 @@ server:
 
   ## Annotations to be added to Prometheus server pods
   ##
-  podAnnotations: {}
+  podAnnotations: 
+    linkerd.io/inject: enabled
     # iam.amazonaws.com/role: prometheus
 
   ## Labels to be added to Prometheus server pods
@@ -554,7 +555,8 @@ server:
 
   ## Annotations to be added to deployment
   ##
-  deploymentAnnotations: {}
+  deploymentAnnotations:
+    linkerd.io/inject: enabled
 
   statefulSet:
     ## If true, use a statefulset instead of a deployment for pod management.
