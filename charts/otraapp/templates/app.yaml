@@ -6,6 +6,8 @@ metadata:
   name: otraapp-app
   labels:
     app: otraapp
+  annotations:
+    linkerd.io/inject: enabled
 spec:
   replicas: 
   selector:

@@ -4,6 +4,8 @@ metadata:
   name: {{ .Release.Name }}-app
   labels:
     app: {{ .Release.Name }}
+  annotations:
+    linkerd.io/inject: enabled 
 spec:
   replicas: {{ .Values.replicas }}
   selector:

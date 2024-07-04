@@ -5,6 +5,8 @@ kind: Service
 metadata:
   name: simpleserver-service
   namespace: simpleserver
+  annotations:
+    linkerd.io/inject: enabled
 spec:
   selector:
     app: simpleserver
