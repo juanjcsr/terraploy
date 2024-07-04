@@ -1228,7 +1228,7 @@ kube-prometheus-stack:
   alertmanager:
     ## If false, alertmanager will not be installed
     ##
-    enabled: false
+    enabled: true
 
     persistence:
       size: 1Gi
