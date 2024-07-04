@@ -2,11 +2,14 @@ argo-cd:
   syncPolicy:
     automated:
       prune: true
+      automated: {}
   dex:
     enabled: false
   global:
     deploymentAnnotations:
       linkerd.io/inject: enabled
+    podAnnotations:
+      linkerd.io/inject: enabled 
   notifications:
     enabled: false
   applicationSet:
