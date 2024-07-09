@@ -1,0 +1,7 @@
+apiVersion: v2
+name: argocd
+version: 1.0.0
+dependencies:
+  - name: argo-rollouts
+    version: 1.7.1
+    repository: https://argoproj.github.io/argo-helm
