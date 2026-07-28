@@ -1,0 +1,28 @@
+appName: test-app
+namespace: test-app
+
+
+image:
+  repository: juanjcsr/test-app
+  tag: latest
+
+
+limits:
+  cpu: 100m
+  memory: 128Mi
+
+requests:
+  cpu: 100m
+  memory: 128Mi
+
+replicas: 10
+
+service:
+  enabled: true
+  type: NodePort
+  port: 8080
+  targetPort: 8080
+  protocol: TCP
+
+hpa:
+  enabled: false
